@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/main_screen.dart'; // 메인 화면 가져오기
 
 void main() {
   runApp(EmotiCareApp());
@@ -10,18 +11,10 @@ class EmotiCareApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'EmotiCare',
-      home: MainScreen(), // 앱 실행 시 첫 화면을 MainScreen으로 설정
-    );
-  }
-}
-
-// 메인 화면
-class MainScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("EmotiCare Main Screen")),
-      body: Center(child: Text("Welcome to EmotiCare!")),
+      theme: ThemeData(
+        primarySwatch: Colors.blue, // 기본 테마 색상
+      ),
+      home: MainScreen(), // 앱 실행 시 메인 화면으로 이동
     );
   }
 }
