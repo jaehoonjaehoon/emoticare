@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'screens/main_screen.dart'; // 메인 화면 가져오기
+import 'screens/main_screen.dart';
 
 void main() {
   runApp(EmotiCareApp());
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class EmotiCareApp extends StatelessWidget {
   @override
@@ -12,9 +14,10 @@ class EmotiCareApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'EmotiCare',
       theme: ThemeData(
-        primarySwatch: Colors.blue, // 기본 테마 색상
+        primarySwatch: Colors.blue,
       ),
-      home: MainScreen(), // 앱 실행 시 메인 화면으로 이동
+      navigatorKey: navigatorKey,
+      home: MainScreen(),
     );
   }
 }
