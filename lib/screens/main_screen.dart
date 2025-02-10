@@ -8,7 +8,10 @@ class MainScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Logo', style: TextStyle(color: Colors.black, fontSize: 20)),
+            Image.asset(
+              'assets/logo.png', // 이미지 경로
+              height: 40, // 이미지 크기 조정
+            ),
             Row(
               children: [
                 Icon(Icons.search, color: Colors.black),
