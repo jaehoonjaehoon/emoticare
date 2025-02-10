@@ -1,6 +1,30 @@
 import 'package:flutter/material.dart';
+import 'login_screen.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0; // 현재 선택된 탭의 인덱스
+  bool _isLoggedIn = false; // 로그인 여부 확인 변수
+
+  // 탭 변경 시 호출되는 함수
+  void _onItemTapped(int index) {
+    if (index == 2 && !_isLoggedIn) {
+      // My 탭 클릭 시 로그인이 되어 있지 않으면 로그인 페이지로 이동
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    } else {
+      setState(() {
+        _selectedIndex = index; // 선택된 인덱스 업데이트
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,8 +33,8 @@ class MainScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset(
-              'assets/logo.png', // 이미지 경로
-              height: 40, // 이미지 크기 조정
+              'assets/logo.png', // 로고 이미지 경로
+              height: 40,
             ),
             Row(
               children: [
@@ -32,11 +56,11 @@ class MainScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildTab('추천'),
-                _buildTab('학업'),
-                _buildTab('연애'),
-                _buildTab('이별'),
-                _buildTab('기타'),
+                _buildTapButton(context, '사업'),
+                _buildTapButton(context, '학업'),
+                _buildTapButton(context, '연애'),
+                _buildTapButton(context, '이별'),
+                _buildTapButton(context, '기타'),
               ],
             ),
           ),
@@ -73,7 +97,7 @@ class MainScreen extends StatelessWidget {
             ),
           ),
 
-          // 상담 주제 카드
+          // 상담 주제 카드 (후기)
           Expanded(
             child: GridView.builder(
               padding: const EdgeInsets.all(10.0),
@@ -89,7 +113,7 @@ class MainScreen extends StatelessWidget {
                   elevation: 3, // 카드 그림자
                   child: Center(
                     child: Text(
-                      '상담 주제 ${index + 1}', // "상담 주제 1, 2, ..." 텍스트
+                      '후기 ${index + 1}', // "후기 1, 2, ..." 텍스트
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -99,57 +123,46 @@ class MainScreen extends StatelessWidget {
           ),
         ],
       ),
-      // BottomAppBar 섹션
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          height: 70, // 하단 네비게이션 바의 높이 설정
-          decoration: BoxDecoration(
-            color: Colors.white, // 배경색
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5), // 그림자
-                blurRadius: 5,
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildIconButton(Icons.menu, '전체메뉴', Colors.black),
-              _buildIconButton(Icons.favorite, '찜', Colors.black),
-              _buildIconButton(Icons.person, '내 프로필', Colors.black),
-              _buildIconButton(Icons.chat, '상담 기록', Colors.black),
-              _buildIconButton(Icons.settings, '설정', Colors.black),
-            ],
-          ),
-        ),
+
+      // Bottom Navigation Bar
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex, // 현재 활성화된 탭의 인덱스
+        onTap: _onItemTapped, // 탭 클릭 시 호출
+        selectedItemColor: Colors.teal, // 활성화된 탭의 색상
+        unselectedItemColor: Colors.black, // 비활성화된 탭의 색상
+        type: BottomNavigationBarType.fixed, // 너비 고정
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
+          BottomNavigationBarItem(icon: Icon(Icons.notes_sharp), label: '상담'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'My'),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: '상담 기록'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: '설정'),
+        ],
       ),
     );
   }
 
-  // Tab Builder
-  Widget _buildTab(String text) {
-    return Text(
-      text,
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-    );
-  }
-
-  // Icon Button Builder with Color
-  Widget _buildIconButton(IconData icon, String label, Color color) {
-    return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 28, color: color), // 아이콘 크기 줄임
-          SizedBox(height: 4), // 간격 조정
-          Text(
-            label,
-            style: TextStyle(fontSize: 10, color: color), // 텍스트 크기 조정
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis, // 텍스트 길이 초과 시 생략 처리
+  // 터치 가능한 탭 버튼 위젯
+  Widget _buildTapButton(BuildContext context, String label) {
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$label 버튼 클릭됨!')),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.grey[300], // 탭 배경색
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
       ),
     );
   }
